@@ -1,6 +1,10 @@
 #include "ClientSide.h"
 #include <sstream>
 #include <conio.h>
+#include <iostream>
+#include <iterator>
+
+
 
 ClientSide::ClientSide()
 {
@@ -29,7 +33,7 @@ void ClientSide::GameLoop()
         char a_key = ' ';
         std::stringstream a_ss;
 
-        while ((a_key != '\r') && (a_key != 27))
+        /*while ((a_key != '\r') && (a_key != 27))
         {
             if (_kbhit())
             {
@@ -41,16 +45,53 @@ void ClientSide::GameLoop()
                 a_ss << a_key;
                 printf("%c", a_key);
             }
-            m_raknetController->RecvData();
+
+        }*/
+
+        m_message = m_raknetController->RecvData();
+
+        if (!m_message.empty())
+        {
+            if (m_gameBoard.size() == 0)
+            {
+                PopulateGameBoard(m_message);
+                
+                if (m_gameBoard.size() == 9)
+                {
+                    DisplayGameBoard(m_gameBoard);
+                }
+            }
         }
         if (a_key == 27)
             break;
-       // int rand = m_random.IRandom(0, 99);
 
-       // printf("%d\n", rand);
 
-        m_raknetController->SendData(a_ss.str().c_str());
+        //  m_raknetController->SendData(a_ss.str().c_str());
 
     }
 
 }
+
+
+void ClientSide::PopulateGameBoard(std::string p_message)
+{
+    std::stringstream a_ss(m_message);
+    std::vector<std::string> a_gameBoard(std::istream_iterator<std::string>{a_ss},
+        std::istream_iterator<std::string>());
+
+    m_gameBoard = a_gameBoard;
+
+}
+
+void ClientSide::DisplayGameBoard(std::vector<std::string>& p_gameBoard)
+{
+    for (int i = 0; i < p_gameBoard.size(); i++)
+    {        
+        if (i != 0 && i % 3 == 0)
+        {
+            printf("\n");
+        }
+        std::cout << p_gameBoard[i] << " ";
+    }
+}
+

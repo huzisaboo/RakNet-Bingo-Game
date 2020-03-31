@@ -20,6 +20,6 @@ public:
 	bool CreateServer(int p_serverPort);
 	bool CreateClient(std::string p_serverIP, int p_serverPort);
 	bool SendData(const char* p_data);
-	bool RecvData();
+	std::string RecvData();
 };
 

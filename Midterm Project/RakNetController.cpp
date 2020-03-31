@@ -2,6 +2,8 @@
 #include "MessageIdentifiers.h"
 #include "RakNetTypes.h"
 #include "BitStream.h"
+#include <iostream>
+
 
 bool RakNetController::Initialize()
 {
@@ -66,7 +68,6 @@ bool RakNetController::SendData(const char* p_data)
 	RakNet::BitStream a_bsOut;
 	a_bsOut.Write((RakNet::MessageID)(ID_USER_PACKET_ENUM + 1));
 	a_bsOut.Write(p_data);
-
 	if (m_peerGUIDs.size() > 0)
 	{
 		for (int i = 0; i < m_peerGUIDs.size(); i++)
@@ -85,8 +86,11 @@ bool RakNetController::SendData(const char* p_data)
 	return true;
 }
 
-bool RakNetController::RecvData()
+
+std::string RakNetController::RecvData()
 {
+	std::string a_message = "";
+
 	for (RakNet::Packet* a_packet = m_peer->Receive(); a_packet; m_peer->DeallocatePacket(a_packet), a_packet = m_peer->Receive())
 	{
 		switch (a_packet->data[0])
@@ -137,15 +141,17 @@ bool RakNetController::RecvData()
 				a_bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
 
 				a_bsIn.Read(a_rs);
-				printf("%s\n", a_rs.C_String());
+				//printf("%s\n", a_rs.C_String());
+				a_message = a_rs.C_String();
 				break;
 			}
 			
-		default:
+			default:
 			printf("Message with identifier %i has arrived\n", a_packet->data[0]);
 			break;
 
 		}
 	}
-	return true;
+
+	return a_message;
 }

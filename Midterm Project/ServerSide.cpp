@@ -2,6 +2,9 @@
 #include <sstream>
 #include <conio.h>
 #include<ctime>
+#include<iostream>
+
+
 
 ServerSide::ServerSide()
 {
@@ -30,7 +33,9 @@ int ServerSide::Initialize()
 
 void ServerSide::GameLoop()
 {
+    int a_counter = 0;
     char a_key = ' ';
+ 
     while (true)
     {
         while ((a_key != 's') && (a_key != 27))
@@ -42,20 +47,34 @@ void ServerSide::GameLoop()
                 {
                     break;
                 }
-                else if (a_key == 's')
-                {
-                    printf("%c\n", a_key);
+                  else if (a_key == 's')
+                 {
+                   /* printf("%c\n", a_key);
+                    a_ss << a_key;
+                    m_raknetController->SendData(a_ss.str().c_str());
+                   */ 
+                    SendGameBoard();
+                   // a_ss.str("");   //clear content of stringstream
                     break;
                 }
                 
             }
-            m_raknetController->RecvData();
-
+          m_message = m_raknetController->RecvData();
         }
         
+       /* if (a_key == 's' && a_counter < 9)
+        {
+            
+                int a_rand = m_random->IRandom(0, 99);
+                m_raknetController->SendData(std::to_string(a_rand).c_str());
+                a_counter++;
+            
+
+            
+        }*/
         
-        m_raknetController->RecvData();
-        int a_rand = m_random->IRandom(0, 99);
+     
+       // int a_rand = m_random->IRandom(0, 99);
         
         if (_kbhit())
         {
@@ -65,10 +84,26 @@ void ServerSide::GameLoop()
                 break;
             }
         }
+        m_message = m_raknetController->RecvData();
 
        // printf("%d\n", rand);
        
-            m_raknetController->SendData(std::to_string(a_rand).c_str());
-            Sleep(100); 
+           // m_raknetController->SendData(std::to_string(a_rand).c_str());
+            //Sleep(1000); 
     }
+
+}
+
+void ServerSide::SendGameBoard()
+{
+    std::stringstream a_ss;
+    for (int i = 0; i < 9; i++)
+    {
+        int a_rand = m_random->IRandom(0, 99);
+        a_ss << a_rand;
+        a_ss << " ";
+    }
+
+    m_raknetController->SendData(a_ss.str().c_str());
+
 }
