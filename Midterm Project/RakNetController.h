@@ -12,9 +12,9 @@ private:
 	RakNet::RakPeerInterface* m_peer = NULL;
 	RakNet::AddressOrGUID m_peerGUID;
 	std::vector<RakNet::AddressOrGUID> m_peerGUIDs;
+	bool m_isServer;
 
 public:
-	bool m_isServer;
 	bool Initialize();
 	bool Cleanup();
 	bool CreateServer(int p_serverPort);

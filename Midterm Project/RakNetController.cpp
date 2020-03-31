@@ -16,6 +16,7 @@ bool RakNetController::Initialize()
 
 bool RakNetController::Cleanup()
 {
+	printf("Controller cleaned up");
 	return false;
 }
 
@@ -66,9 +67,17 @@ bool RakNetController::SendData(const char* p_data)
 	a_bsOut.Write((RakNet::MessageID)(ID_USER_PACKET_ENUM + 1));
 	a_bsOut.Write(p_data);
 
-	for (int i = 0; i < m_peerGUIDs.size(); i++)
+	if (m_peerGUIDs.size() > 0)
 	{
-		m_peer->Send(&a_bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_peerGUIDs[i], false);
+		for (int i = 0; i < m_peerGUIDs.size(); i++)
+		{
+			m_peer->Send(&a_bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_peerGUIDs[i], false);
+		}
+	}
+
+	else
+	{
+		m_peer->Send(&a_bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_peerGUID, false);
 	}
 	
 	
