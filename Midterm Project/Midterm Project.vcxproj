@@ -152,11 +152,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ClientSide.cpp" />
+    <ClCompile Include="mersenne.cpp" />
     <ClCompile Include="Midterm Project.cpp" />
     <ClCompile Include="RakNetController.cpp" />
+    <ClCompile Include="ServerSide.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ClientSide.h" />
     <ClInclude Include="RakNetController.h" />
+    <ClInclude Include="randomc.h" />
+    <ClInclude Include="ServerSide.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

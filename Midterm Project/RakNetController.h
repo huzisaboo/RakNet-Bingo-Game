@@ -4,15 +4,17 @@
 #include <string>
 
 #include "RakPeerInterface.h"
+#include <vector>
 
 class RakNetController
 {
 private:
 	RakNet::RakPeerInterface* m_peer = NULL;
 	RakNet::AddressOrGUID m_peerGUID;
-	bool m_isServer;
+	std::vector<RakNet::AddressOrGUID> m_peerGUIDs;
 
 public:
+	bool m_isServer;
 	bool Initialize();
 	bool Cleanup();
 	bool CreateServer(int p_serverPort);

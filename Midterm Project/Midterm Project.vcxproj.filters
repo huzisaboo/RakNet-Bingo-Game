@@ -21,9 +21,27 @@
     <ClCompile Include="RakNetController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="mersenne.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerSide.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientSide.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RakNetController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="randomc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerSide.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientSide.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

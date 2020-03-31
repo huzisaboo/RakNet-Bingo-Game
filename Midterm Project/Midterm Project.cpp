@@ -3,10 +3,12 @@
 #include <conio.h>
 #include <sstream>
 #include "RakNetController.h"
+#include "randomc.h"
+#include <ctime>
 
 
 static RakNetController m_rn = RakNetController();
-
+static CRandomMersenne m_random = CRandomMersenne(time(0));
 
 int Initialize(char* argv[])
 {
@@ -50,8 +52,12 @@ void GameLoop()
         }
         if (a_key == 27)
             break;
+       int rand = m_random.IRandom(0, 99);
+
+       printf("%d\n",rand);
 
         m_rn.SendData(a_ss.str().c_str());
+
     }
 }
 
@@ -63,6 +69,8 @@ int main(int argc, char* argv[])
 
     if (a_retValue == 0)
     {
+        
+        
         GameLoop();
         m_rn.Cleanup();
     }

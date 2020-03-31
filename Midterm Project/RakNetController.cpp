@@ -30,7 +30,7 @@ bool RakNetController::CreateServer(int p_serverPort)
 		return false;
 	}
 
-	m_peer->SetMaximumIncomingConnections(8);
+	m_peer->SetMaximumIncomingConnections(2);
 
 	printf("Server started \n");
 	return true;
@@ -65,9 +65,14 @@ bool RakNetController::SendData(const char* p_data)
 	RakNet::BitStream a_bsOut;
 	a_bsOut.Write((RakNet::MessageID)(ID_USER_PACKET_ENUM + 1));
 	a_bsOut.Write(p_data);
-	m_peer->Send(&a_bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_peerGUID, false);
 
-	printf("Message sent\n");
+	for (int i = 0; i < m_peerGUIDs.size(); i++)
+	{
+		m_peer->Send(&a_bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_peerGUIDs[i], false);
+	}
+	
+	
+	printf("\nMessage sent\n");
 	return true;
 }
 
@@ -89,10 +94,11 @@ bool RakNetController::RecvData()
 			printf("Connection has been accepted\n");
 			m_peerGUID = a_packet->systemAddress;
 			break;
-			 
+				
 		case ID_NEW_INCOMING_CONNECTION:
 			printf("A connection is incoming\n");
 			m_peerGUID = a_packet->systemAddress;
+			m_peerGUIDs.push_back(m_peerGUID);
 			break;
 		
 		case ID_NO_FREE_INCOMING_CONNECTIONS:
