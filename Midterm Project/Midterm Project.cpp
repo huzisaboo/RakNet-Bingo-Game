@@ -1,12 +1,5 @@
-#include <iostream>
-#include <stdio.h>
-#include <conio.h>
-#include <sstream>
-#include "RakNetController.h"
-#include "randomc.h"
 #include "ServerSide.h"
 #include "ClientSide.h"
-#include <ctime>
 
 
 //static RakNetController m_rn = RakNetController();

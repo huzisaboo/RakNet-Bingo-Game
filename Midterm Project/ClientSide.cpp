@@ -51,16 +51,25 @@ void ClientSide::GameLoop()
 
         if (!m_message.empty())
         {
-            if (m_gameBoard.size() == 0)
+            if (m_gameBoard.size() == 0)        //Client has not received the game board yet 
             { 
                 if (PopulateGameBoard(m_message))
                 {
                     DisplayGameBoard();
                 }
             }
-            else if(m_gameBoard.size() == 9)
+            else if(m_gameBoard.size() == 9)    //Client has received the game board
             {
                 std::cout << m_message << std::endl;
+                for (int i = 0; i < m_gameBoard.size(); i++)
+                {
+                    if (m_gameBoard[i]._Equal(m_message))
+                    {
+                        std::cout << "!!!!!!!!!!!Match Found At Location "<<i+1<<" !!!!!!!!!!"<<std::endl;
+                        m_gameBoard[i] = "0";
+                        DisplayGameBoard();
+                    }
+                }
             }
         }
 
@@ -100,7 +109,7 @@ void ClientSide::DisplayGameBoard()
             }
             std::cout << m_gameBoard[i] << " ";
         }
-        std::cout << std::endl;
+        std::cout << std::endl <<std::endl;
     }
     
 }

@@ -2,7 +2,6 @@
 #include <sstream>
 #include <conio.h>
 #include<ctime>
-#include<time.h>
 #include<iostream>
 
 
@@ -94,7 +93,7 @@ void ServerSide::SendGameBoard(RakNet::AddressOrGUID p_peerGUID)
 
 	for (int i = 0; i < 9; i++)
 	{
-		int a_rand = m_random->IRandom(0, 99);
+		int a_rand = m_random->IRandom(10, 99);
 		a_ss << a_rand;
 		a_ss << " ";
 	}
@@ -105,7 +104,7 @@ void ServerSide::SendGameBoard(RakNet::AddressOrGUID p_peerGUID)
 void ServerSide::SendRandomNumber()
 {
 	Sleep(100);
-	int a_rand = m_random->IRandom(0, 99);
+	int a_rand = m_random->IRandom(10, 99);
 
 	for (auto a_peerGUID : m_raknetController->m_peerGUIDs)
 	{
