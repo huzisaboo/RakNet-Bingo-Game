@@ -10,7 +10,7 @@ private:
 	std::vector<std::string> m_gameBoard;
 	std::string m_message;
 	RakNetController* m_raknetController;
-	void PopulateGameBoard(std::string p_message);
+	bool PopulateGameBoard(std::string p_message);
 	void DisplayGameBoard();
 
 public:

@@ -31,7 +31,6 @@ void ClientSide::GameLoop()
     while (true)
     {
         char a_key = ' ';
-        std::stringstream a_ss;
 
         /*while ((a_key != '\r') && (a_key != 27))
         {
@@ -53,13 +52,15 @@ void ClientSide::GameLoop()
         if (!m_message.empty())
         {
             if (m_gameBoard.size() == 0)
-            {
-                PopulateGameBoard(m_message);
-                
-                if (m_gameBoard.size() == 9)
+            { 
+                if (PopulateGameBoard(m_message))
                 {
                     DisplayGameBoard();
                 }
+            }
+            else if(m_gameBoard.size() == 9)
+            {
+                std::cout << m_message << std::endl;
             }
         }
 
@@ -75,14 +76,15 @@ void ClientSide::GameLoop()
 }
 
 
-void ClientSide::PopulateGameBoard(std::string p_message)
+bool ClientSide::PopulateGameBoard(std::string p_message)
 {
-    std::stringstream a_ss(m_message);
+    std::stringstream a_ss(p_message);
     std::vector<std::string> a_gameBoard(std::istream_iterator<std::string>{a_ss},
         std::istream_iterator<std::string>());
 
     m_gameBoard = a_gameBoard;
 
+    return true;
 }
 
 void ClientSide::DisplayGameBoard()

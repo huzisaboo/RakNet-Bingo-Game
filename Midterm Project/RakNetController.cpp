@@ -146,6 +146,7 @@ std::string RakNetController::RecvData()
 				a_bsIn.Read(a_rs);
 				//printf("%s\n", a_rs.C_String());
 				a_message = a_rs.C_String();
+				//std::cout << a_message << std::endl;
 				break;
 			}
 			
