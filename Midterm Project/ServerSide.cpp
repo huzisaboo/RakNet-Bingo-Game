@@ -48,21 +48,21 @@ void ServerSide::GameLoop()
                     break;
                 }
                   else if (a_key == 's')
-                 {
-                   /* printf("%c\n", a_key);
-                    a_ss << a_key;
-                    m_raknetController->SendData(a_ss.str().c_str());
-                   */ 
-                    /*for (auto a_peerGUID : m_raknetController->m_peerGUIDs)*/
-                    for (auto a_peerGUID : m_raknetController->m_peerGUIDs)
+                  {
+                    if (m_raknetController->m_peerGUIDs.size() > 0)
                     {
-                        SendGameBoard(a_peerGUID);
-                    }
+                        for (auto a_peerGUID : m_raknetController->m_peerGUIDs)
+                        {
+                            SendGameBoard(a_peerGUID);
+                        }
 
-                    
-                   // a_ss.str("");   //clear content of stringstream
-                    break;
-                }
+                        break;
+                    }
+                    else
+                    {
+                        a_key = ' ';    //resetting the key so that the inner loop is not terminated unnecesarily which could happen if user presses "s"
+                    }                   //even though no client is connected to the server
+                  }
                 
             }
           m_message = m_raknetController->RecvData();
@@ -81,14 +81,13 @@ void ServerSide::GameLoop()
         
      
        // int a_rand = m_random->IRandom(0, 99);
-        
-        if (_kbhit())
+        if (a_key == 27)
+        {
+            break;
+        }
+        else if (_kbhit())
         {
             a_key = _getch();
-            if (a_key == 27)
-            {
-                break;
-            }
         }
         m_message = m_raknetController->RecvData();
 
