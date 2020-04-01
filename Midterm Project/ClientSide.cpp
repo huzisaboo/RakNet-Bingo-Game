@@ -58,16 +58,18 @@ void ClientSide::GameLoop()
                 
                 if (m_gameBoard.size() == 9)
                 {
-                    DisplayGameBoard(m_gameBoard);
+                    DisplayGameBoard();
                 }
             }
         }
-        if (a_key == 27)
-            break;
 
-
+        if (_kbhit())
+        {
+            a_key = _getch();
+            if (a_key == 27)
+                break;
+        }
         //  m_raknetController->SendData(a_ss.str().c_str());
-
     }
 
 }
@@ -83,15 +85,21 @@ void ClientSide::PopulateGameBoard(std::string p_message)
 
 }
 
-void ClientSide::DisplayGameBoard(std::vector<std::string>& p_gameBoard)
+void ClientSide::DisplayGameBoard()
 {
-    for (int i = 0; i < p_gameBoard.size(); i++)
-    {        
-        if (i != 0 && i % 3 == 0)
+    if (m_gameBoard.size() == 9)
+    {
+        std::cout << "Game Board:" << std::endl;
+        for (int i = 0; i < m_gameBoard.size(); i++)
         {
-            printf("\n");
+            if (i != 0 && i % 3 == 0)
+            {
+                std::cout << std::endl;
+            }
+            std::cout << m_gameBoard[i] << " ";
         }
-        std::cout << p_gameBoard[i] << " ";
+        std::cout << std::endl;
     }
+    
 }
 

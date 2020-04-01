@@ -53,7 +53,13 @@ void ServerSide::GameLoop()
                     a_ss << a_key;
                     m_raknetController->SendData(a_ss.str().c_str());
                    */ 
-                    SendGameBoard();
+                    /*for (auto a_peerGUID : m_raknetController->m_peerGUIDs)*/
+                    for (auto a_peerGUID : m_raknetController->m_peerGUIDs)
+                    {
+                        SendGameBoard(a_peerGUID);
+                    }
+
+                    
                    // a_ss.str("");   //clear content of stringstream
                     break;
                 }
@@ -94,16 +100,17 @@ void ServerSide::GameLoop()
 
 }
 
-void ServerSide::SendGameBoard()
+void ServerSide::SendGameBoard(RakNet::AddressOrGUID p_peerGUID)
 {
     std::stringstream a_ss;
-    for (int i = 0; i < 9; i++)
-    {
-        int a_rand = m_random->IRandom(0, 99);
-        a_ss << a_rand;
-        a_ss << " ";
-    }
 
-    m_raknetController->SendData(a_ss.str().c_str());
-
+        for (int i = 0; i < 9; i++)
+        {
+            int a_rand = m_random->IRandom(0, 99);
+            a_ss << a_rand;
+            a_ss << " ";
+        }
+        m_raknetController->SendDataByGUID(a_ss.str().c_str(), p_peerGUID);
+    
+    
 }

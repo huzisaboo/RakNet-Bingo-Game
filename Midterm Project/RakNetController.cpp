@@ -68,20 +68,23 @@ bool RakNetController::SendData(const char* p_data)
 	RakNet::BitStream a_bsOut;
 	a_bsOut.Write((RakNet::MessageID)(ID_USER_PACKET_ENUM + 1));
 	a_bsOut.Write(p_data);
-	if (m_peerGUIDs.size() > 0)
-	{
-		for (int i = 0; i < m_peerGUIDs.size(); i++)
-		{
-			m_peer->Send(&a_bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_peerGUIDs[i], false);
-		}
-	}
-
-	else
-	{
+	
 		m_peer->Send(&a_bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_peerGUID, false);
-	}
 	
 	
+	printf("\nMessage sent\n");
+	return true;
+}
+
+bool RakNetController::SendDataByGUID(const char* p_data, RakNet::AddressOrGUID p_peerGUID)
+{
+	RakNet::BitStream a_bsOut;
+	a_bsOut.Write((RakNet::MessageID)(ID_USER_PACKET_ENUM + 1));
+	a_bsOut.Write(p_data);
+
+	m_peer->Send(&a_bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_peerGUID, false);
+
+
 	printf("\nMessage sent\n");
 	return true;
 }

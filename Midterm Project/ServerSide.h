@@ -11,7 +11,7 @@ private:
 
 	 RakNetController* m_raknetController;
 	 CRandomMersenne* m_random;
-	 void SendGameBoard();
+	 void SendGameBoard(RakNet::AddressOrGUID p_peerGUID);
 
 public:
 	ServerSide();
