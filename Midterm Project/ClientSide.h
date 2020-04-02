@@ -2,7 +2,6 @@
 #include "RakNetController.h"
 #ifndef CLIENTSIDE_H
 #define CLIENTSIDE_H
-//#include "RakNetController.h"
 
 class ClientSide
 {
