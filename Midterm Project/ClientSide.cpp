@@ -68,6 +68,11 @@ void ClientSide::GameLoop()
                         std::cout << "!!!!!!!!!!!Match Found At Location "<<i+1<<" !!!!!!!!!!"<<std::endl;
                         m_gameBoard[i] = "0";
                         DisplayGameBoard();
+                        if (WinCondition())
+                        {
+                            m_raknetController->SendData("Bingo!");
+                            break;
+                        }
                     }
                 }
             }
@@ -94,6 +99,16 @@ bool ClientSide::PopulateGameBoard(std::string p_message)
     m_gameBoard = a_gameBoard;
 
     return true;
+}
+
+bool ClientSide::WinCondition()
+{
+    if (std::count(m_gameBoard.begin(), m_gameBoard.end(), "0") == m_gameBoard.size())
+    {
+        return true;
+    }
+
+    return false;
 }
 
 void ClientSide::DisplayGameBoard()

@@ -32,7 +32,6 @@ int ServerSide::Initialize()
 
 void ServerSide::GameLoop()
 {
-	int a_counter = 0;
 	char a_key = ' ';
 
 	while (true)
@@ -53,6 +52,7 @@ void ServerSide::GameLoop()
 						for (auto a_peerGUID : m_raknetController->m_peerGUIDs)
 						{
 							SendGameBoard(a_peerGUID);
+							m_startTime = std::chrono::system_clock::now();
 						}
 
 						break;
@@ -67,6 +67,29 @@ void ServerSide::GameLoop()
 			m_message = m_raknetController->RecvData();
 		}
 
+		m_message = m_raknetController->RecvData();
+		
+		if (!m_message.empty() && !m_winnerDeclared)
+		{
+			if (m_message._Equal("Bingo!"))
+			{
+				std::cout << "Winner!" << std::endl;
+				m_winnerDeclared = true;
+			}
+		}
+		else if(!m_winnerDeclared)
+		{
+			m_endTime = std::chrono::system_clock::now();
+			
+			m_deltaTime = m_endTime - m_startTime;
+
+			if (m_deltaTime.count() >= 0.1f)
+			{
+				SendRandomNumber();
+				m_startTime = std::chrono::system_clock::now();
+			}
+		}
+
 		if (a_key == 27)
 		{
 			break;
@@ -79,10 +102,6 @@ void ServerSide::GameLoop()
 				break;
 			}
 		}
-
-		SendRandomNumber();
-
-		m_message = m_raknetController->RecvData();
 	}
 
 }
@@ -103,7 +122,6 @@ void ServerSide::SendGameBoard(RakNet::AddressOrGUID p_peerGUID)
 
 void ServerSide::SendRandomNumber()
 {
-	Sleep(100);
 	int a_rand = m_random->IRandom(10, 99);
 
 	for (auto a_peerGUID : m_raknetController->m_peerGUIDs)

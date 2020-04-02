@@ -11,7 +11,9 @@ private:
 	std::string m_message;
 	RakNetController* m_raknetController;
 	bool PopulateGameBoard(std::string p_message);
+	bool WinCondition();
 	void DisplayGameBoard();
+
 
 public:
 	 

@@ -71,8 +71,8 @@ bool RakNetController::SendData(const char* p_data)
 	
 		m_peer->Send(&a_bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_peerGUID, false);
 	
-	
-	printf("\nMessage sent\n");
+		std::cout << "Message sent:" << p_data << std::endl;
+	//printf("Message sent\n");
 	return true;
 }
 
@@ -85,7 +85,7 @@ bool RakNetController::SendDataByGUID(const char* p_data, RakNet::AddressOrGUID 
 	m_peer->Send(&a_bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_peerGUID, false);
 
 
-	printf("\nMessage sent\n");
+	std::cout << "Message sent:" << p_data << std::endl;
 	return true;
 }
 
