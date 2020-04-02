@@ -5,6 +5,7 @@
 #include <iostream>
 
 
+
 bool RakNetController::Initialize()
 {
 	m_peer = RakNet::RakPeerInterface::GetInstance();
@@ -18,8 +19,11 @@ bool RakNetController::Initialize()
 
 bool RakNetController::Cleanup()
 {
-	printf("Controller cleaned up");
-	return false;
+	delete m_peer;
+	m_peer = nullptr;
+
+	std::cout << "Good Bye!" << std::endl;
+	return true;
 }
 
 bool RakNetController::CreateServer(int p_serverPort)
@@ -29,13 +33,13 @@ bool RakNetController::CreateServer(int p_serverPort)
 
 	if (m_peer->Startup(8, &sd, 1) != RakNet::RAKNET_STARTED)
 	{
-		printf("Server failed to connect \n");
+		std::cout << "Server failed to connect" << std::endl;
 		return false;
 	}
 
-	m_peer->SetMaximumIncomingConnections(2);
+	m_peer->SetMaximumIncomingConnections(4);
 
-	printf("Server started \n");
+	std::cout << "Server started" << std::endl;
 	return true;
 }
 
@@ -47,17 +51,17 @@ bool RakNetController::CreateClient(std::string p_serverIP, int p_serverPort)
 
 	if (m_peer->Startup(1, &sd, 1) != RakNet::RAKNET_STARTED)
 	{
-		printf("Client failed to start up\n");
+		std::cout << "Client failed to start up" << std::endl;
 		return false;
 	}
 
 	if (m_peer->Connect(p_serverIP.c_str(), p_serverPort, 0, 0) != RakNet::CONNECTION_ATTEMPT_STARTED)
 	{
-		printf("Client failed to connect\n");
+		std::cout << "Client failed to connect" << std::endl;
 		return false;
 	}
 
-	printf("Client started\n");
+	std::cout << "Client started" << std::endl;
 	return true;
 }
 
@@ -68,11 +72,10 @@ bool RakNetController::SendData(const char* p_data)
 	RakNet::BitStream a_bsOut;
 	a_bsOut.Write((RakNet::MessageID)(ID_USER_PACKET_ENUM + 1));
 	a_bsOut.Write(p_data);
-	
-		m_peer->Send(&a_bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_peerGUID, false);
-	
-		std::cout << "Message sent:" << p_data << std::endl;
-	//printf("Message sent\n");
+
+	m_peer->Send(&a_bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_peerGUID, false);
+
+	std::cout << "Message sent:" << p_data << std::endl;
 	return true;
 }
 
@@ -99,59 +102,58 @@ std::string RakNetController::RecvData()
 		switch (a_packet->data[0])
 		{
 		case ID_REMOTE_CONNECTION_LOST:
-			printf("Another client has lost the connection\n");
+			std::cout << "Another client has lost the connection" << std::endl;
 			break;
 
 		case ID_REMOTE_NEW_INCOMING_CONNECTION:
-			printf("Another client has connected\n");
+			std::cout << "Another client has connected" << std::endl;
 			break;
 
 		case ID_CONNECTION_REQUEST_ACCEPTED:
-			printf("Connection has been accepted\n");
+			std::cout << "Connection has been accepted" << std::endl;
 			m_peerGUID = a_packet->systemAddress;
 			break;
-				
+
 		case ID_NEW_INCOMING_CONNECTION:
-			printf("A connection is incoming\n");
+			std::cout << "A connection is incoming" << std::endl;
 			m_peerGUID = a_packet->systemAddress;
 			m_peerGUIDs.push_back(m_peerGUID);
 			break;
-		
+
 		case ID_NO_FREE_INCOMING_CONNECTIONS:
-			printf("The server is full\n");
+			std::cout << "The server is full" << std::endl;
 
 		case ID_DISCONNECTION_NOTIFICATION:
-			
+
 			if (m_isServer)
-				printf("A client has been disconnected\n");
+				std::cout << "A client has been disconnected" << std::endl;
 			else
-				printf("We have been disconnected");
+				std::cout << "We have been disconnected" << std::endl;
+
 			break;
 
 		case ID_CONNECTION_LOST:
-			if(m_isServer)
-			printf("A client has lost the connection\n");
+			if (m_isServer)
+				std::cout << "A client has lost the connection" << std::endl;
 			else
 			{
-				printf("Connection Lost\n");
+				std::cout << "Connection Lost" << std::endl;
 			}
 			break;
 
-			case ID_USER_PACKET_ENUM + 1:
-			{
-				RakNet::RakString a_rs;
-				RakNet::BitStream a_bsIn(a_packet->data, a_packet->length, false);
-				a_bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
+		case ID_USER_PACKET_ENUM + 1:
+		{
+			RakNet::RakString a_rs;
+			RakNet::BitStream a_bsIn(a_packet->data, a_packet->length, false);
+			a_bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
 
-				a_bsIn.Read(a_rs);
-				//printf("%s\n", a_rs.C_String());
-				a_message = a_rs.C_String();
-				//std::cout << a_message << std::endl;
-				break;
-			}
-			
-			default:
-			printf("Message with identifier %i has arrived\n", a_packet->data[0]);
+			a_bsIn.Read(a_rs);
+			a_message = a_rs.C_String();
+			break;
+		}
+
+		default:
+			std::cout << "Message with identifier %i has arrived" << a_packet->data[0] << std::endl;
 			break;
 
 		}

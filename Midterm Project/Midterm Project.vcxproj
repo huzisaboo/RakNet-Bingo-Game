@@ -154,7 +154,7 @@
   <ItemGroup>
     <ClCompile Include="ClientSide.cpp" />
     <ClCompile Include="mersenne.cpp" />
-    <ClCompile Include="Midterm Project.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="RakNetController.cpp" />
     <ClCompile Include="ServerSide.cpp" />
   </ItemGroup>

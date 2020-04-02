@@ -4,7 +4,6 @@
 #include<ctime>
 #include<iostream>
 
-
 ServerSide::ServerSide()
 {
 	m_raknetController = new RakNetController();
@@ -13,12 +12,14 @@ ServerSide::ServerSide()
 
 ServerSide::~ServerSide()
 {
-	m_raknetController->Cleanup();
-	delete m_raknetController;
-	delete m_random;
+	if (m_raknetController->Cleanup())
+	{
+		delete m_raknetController;
+		delete m_random;
 
-	m_raknetController = nullptr;
-	m_random = nullptr;
+		m_raknetController = nullptr;
+		m_random = nullptr;
+	}
 }
 
 int ServerSide::Initialize()
@@ -33,6 +34,9 @@ int ServerSide::Initialize()
 void ServerSide::GameLoop()
 {
 	char a_key = ' ';
+	std::chrono::time_point<std::chrono::system_clock> a_startTime;
+	std::chrono::time_point<std::chrono::system_clock> a_endTime;
+	std::chrono::duration<float> a_deltaTime;
 
 	while (true)
 	{
@@ -52,7 +56,7 @@ void ServerSide::GameLoop()
 						for (auto a_peerGUID : m_raknetController->m_peerGUIDs)
 						{
 							SendGameBoard(a_peerGUID);
-							m_startTime = std::chrono::system_clock::now();
+							a_startTime = std::chrono::system_clock::now();
 						}
 
 						break;
@@ -67,8 +71,8 @@ void ServerSide::GameLoop()
 			m_message = m_raknetController->RecvData();
 		}
 
-		m_message = m_raknetController->RecvData();
-		
+		m_message = m_raknetController->RecvData();		//Now the server would call receivedata method with respect to the outer loop since it has exited the inner
+														//loop
 		if (!m_message.empty() && !m_winnerDeclared)
 		{
 			if (m_message._Equal("Bingo!"))
@@ -77,27 +81,27 @@ void ServerSide::GameLoop()
 				m_winnerDeclared = true;
 			}
 		}
-		else if(!m_winnerDeclared)
+		else if (!m_winnerDeclared)
 		{
-			m_endTime = std::chrono::system_clock::now();
-			
-			m_deltaTime = m_endTime - m_startTime;
+			a_endTime = std::chrono::system_clock::now();
 
-			if (m_deltaTime.count() >= 0.1f)
+			a_deltaTime = a_endTime - a_startTime;
+
+			if (a_deltaTime.count() >= m_maxDurationTime)
 			{
 				SendRandomNumber();
-				m_startTime = std::chrono::system_clock::now();
+				a_startTime = std::chrono::system_clock::now();
 			}
 		}
 
-		if (a_key == 27)
+		if (a_key == 27)	//If ESC is pressed while being in inner loop
 		{
 			break;
 		}
 		else if (_kbhit())
 		{
 			a_key = _getch();
-			if (a_key == 27)
+			if (a_key == 27)	// If ESC is pressed while being in inner loop
 			{
 				break;
 			}
@@ -128,6 +132,4 @@ void ServerSide::SendRandomNumber()
 	{
 		m_raknetController->SendDataByGUID(std::to_string(a_rand).c_str(), a_peerGUID);
 	}
-
-
 }

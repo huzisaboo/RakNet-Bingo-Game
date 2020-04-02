@@ -16,7 +16,6 @@ private:
 
 
 public:
-	 
 	ClientSide();
 	~ClientSide();
 	int Initialize();
